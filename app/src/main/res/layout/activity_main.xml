@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.berberman.conveyorbeltrecorder.MainActivity">
+    <!--    <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true" android:layout_marginEnd="50dp" android:layout_marginTop="135dp"
+                android:width="80dp" android:height="40dp" android:id="@+id/button2"/>
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2" android:layout_below="@+id/button2"
+            android:layout_marginTop="15dp" android:width="80dp" android:height="40dp"/>
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button4" android:layout_below="@+id/button4" android:layout_marginTop="15dp"
+            android:text="Button"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_alignParentStart="true" android:layout_alignTop="@+id/button2" android:layout_marginStart="70dp"
+            app:srcCompat="@mipmap/ic_launcher"/>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imageView3" android:layout_below="@+id/imageView3" app:srcCompat="@mipmap/ic_launcher"/>
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imageView" android:layout_below="@+id/imageView" app:srcCompat="@mipmap/ic_launcher"/>
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_below="@+id/imageView2" android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp" android:text="Button"/>-->
+</RelativeLayout>
