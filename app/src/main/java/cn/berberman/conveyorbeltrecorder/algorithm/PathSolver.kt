@@ -1,0 +1,3 @@
+package cn.berberman.conveyorbeltrecorder.algorithm
+
+class PathSolver
