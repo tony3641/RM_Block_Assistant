@@ -11,8 +11,8 @@ object HttpUtil {
 				val connection = url.openConnection() as HttpURLConnection
 				with(connection) {
 					requestMethod = "GET"
-					connectTimeout = 5000
-					readTimeout = 5000
+					connectTimeout = 3000
+					readTimeout = 9000
 				}
 
 				try {
