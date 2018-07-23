@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Deep♂Dark Control Assistant</string>
+    <string name="color_active">Active</string>
+    <string name="stack_pop">pop</string>
 </resources>

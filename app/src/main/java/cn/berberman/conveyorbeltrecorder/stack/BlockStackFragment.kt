@@ -1,15 +1,16 @@
 package cn.berberman.conveyorbeltrecorder.stack
 
-import android.app.Fragment
 import android.os.Bundle
 import android.support.annotation.ColorRes
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import cn.berberman.conveyorbeltrecorder.R
-import org.jetbrains.anko.UI
+import org.jetbrains.anko.support.v4.UI
 
 class BlockStackFragment : Fragment(), View.OnClickListener {
 
@@ -28,11 +29,11 @@ class BlockStackFragment : Fragment(), View.OnClickListener {
 
 	private lateinit var block3: ImageView
 
-	private lateinit var popButton: Button
+	private lateinit var popButton: FloatingActionButton
 
 	private lateinit var blockStack: BlockStack
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View = run {
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val ui = UI { BlockStackUI().createView(this) }.view
 		initView(ui)
 		blockStack = BlockStack(listOf(block1, block2, block3))
@@ -41,8 +42,20 @@ class BlockStackFragment : Fragment(), View.OnClickListener {
 		yellow.setOnClickListener(this)
 		blue.setOnClickListener(this)
 		popButton.setOnClickListener(this)
-		ui
+		return ui
 	}
+
+//	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View = run {
+//		val ui = UI { BlockStackUI().createView(this) }.view
+//		initView(ui)
+//		blockStack = BlockStack(listOf(block1, block2, block3))
+//		red.setOnClickListener(this)
+//		green.setOnClickListener(this)
+//		yellow.setOnClickListener(this)
+//		blue.setOnClickListener(this)
+//		popButton.setOnClickListener(this)
+//		ui
+//	}
 
 	private fun initView(view: View) {
 		with(view) {

@@ -1,9 +1,10 @@
 package cn.berberman.conveyorbeltrecorder.stack
 
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.view.View
 import cn.berberman.conveyorbeltrecorder.R
 import org.jetbrains.anko.*
+import org.jetbrains.anko.design.floatingActionButton
 
 
 class BlockStackUI : AnkoComponent<Fragment> {
@@ -93,9 +94,9 @@ class BlockStackUI : AnkoComponent<Fragment> {
 				height = dip(80)
 			}
 
-			button {
+			floatingActionButton {
 				id = POP_BUTTON_ID
-				text = "POP"
+				imageResource = R.drawable.ic_eject_white_24dp
 			}.lparams {
 				below(BLOCK3_ID)
 				centerHorizontally()
