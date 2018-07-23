@@ -9,8 +9,15 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import cn.berberman.conveyorbeltrecorder.R
 import cn.berberman.conveyorbeltrecorder.algorithm.PathSolver.Color
+import cn.berberman.conveyorbeltrecorder.http.HttpUtil
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.UI
+import org.jetbrains.anko.support.v4.onUiThread
+import org.jetbrains.anko.support.v4.toast
 
 class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 
@@ -75,6 +82,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 			it.setOnClickListener(this)
 		}
 		clearButton.setOnClickListener(this)
+		doneButton.setOnClickListener(this)
 
 		activeColor(Color.NULL)
 	}
@@ -109,6 +117,50 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 				blocks.forEach { it.setBackgroundColor(context.getColor(Color.NULL.color)) }
 				for (i in colorData.indices)
 					colorData[i] = Color.NULL
+			}
+
+			PathSolverUI.DONE_BUTTON_ID               -> {
+
+
+				val data = PathSolver.encode(colorData)
+				debug("!data: " + data.joinToString())
+				if (data.size != 16) {
+					toast("图似乎不对~")
+					return
+				}
+
+				val task =
+						async(CommonPool) {
+							HttpUtil.httpGet("http://192.168.1.103:2333",
+									data.also { debug(it.joinToString()) })
+						}
+				launch(CommonPool) {
+					val result = task.await()
+
+					if (result == "timeout") {
+						onUiThread {
+							toast("解图超时了~")
+							for (i in colorData.indices) {
+								colorData[i] = Color.NULL
+								refresh(i)
+							}
+						}
+						return@launch
+					}
+
+					val d = result.split("-")
+							.map { it.toInt() }.toIntArray().map(Color.Companion::fromCode)
+
+					onUiThread {
+						if (d.size == 64)
+							for (i in colorData.indices) {
+								colorData[i] = d[i]
+								refresh(i)
+							}
+						else toast("图似乎无解~")
+
+					}
+				}
 			}
 		}
 	}

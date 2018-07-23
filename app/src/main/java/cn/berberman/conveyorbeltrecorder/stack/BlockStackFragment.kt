@@ -29,6 +29,8 @@ class BlockStackFragment : Fragment(), View.OnClickListener {
 
 	private lateinit var block3: ImageView
 
+	private lateinit var block4: ImageView
+
 	private lateinit var popButton: FloatingActionButton
 
 	private lateinit var blockStack: BlockStack
@@ -36,7 +38,7 @@ class BlockStackFragment : Fragment(), View.OnClickListener {
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val ui = UI { BlockStackUI().createView(this) }.view
 		initView(ui)
-		blockStack = BlockStack(listOf(block1, block2, block3))
+		blockStack = BlockStack(listOf(block1, block2, block3, block4))
 		red.setOnClickListener(this)
 		green.setOnClickListener(this)
 		yellow.setOnClickListener(this)
@@ -45,17 +47,6 @@ class BlockStackFragment : Fragment(), View.OnClickListener {
 		return ui
 	}
 
-//	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View = run {
-//		val ui = UI { BlockStackUI().createView(this) }.view
-//		initView(ui)
-//		blockStack = BlockStack(listOf(block1, block2, block3))
-//		red.setOnClickListener(this)
-//		green.setOnClickListener(this)
-//		yellow.setOnClickListener(this)
-//		blue.setOnClickListener(this)
-//		popButton.setOnClickListener(this)
-//		ui
-//	}
 
 	private fun initView(view: View) {
 		with(view) {
@@ -66,6 +57,7 @@ class BlockStackFragment : Fragment(), View.OnClickListener {
 			block1 = findViewById(BlockStackUI.BLOCK1_ID)
 			block2 = findViewById(BlockStackUI.BLOCK2_ID)
 			block3 = findViewById(BlockStackUI.BLOCK3_ID)
+			block4 = findViewById(BlockStackUI.BLOCK4_ID)
 			popButton = findViewById(BlockStackUI.POP_BUTTON_ID)
 		}
 	}

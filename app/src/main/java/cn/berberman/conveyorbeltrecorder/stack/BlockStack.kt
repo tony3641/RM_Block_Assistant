@@ -24,7 +24,7 @@ class BlockStack(private val views: List<ImageView>) : AnkoLogger {
 
 	fun push(color: Int) {
 		verbose("stack size: ${stack.size}")
-		if (stack.size == 3) {
+		if (stack.size == 4) {
 			warn("stack is full!")
 			views[0].context.toast("stack is full!")
 			return
@@ -38,6 +38,7 @@ class BlockStack(private val views: List<ImageView>) : AnkoLogger {
 		views[0].setBackgroundColor(stack.getOrNull(stack.size - 1) ?: Color.TRANSPARENT)
 		views[1].setBackgroundColor(stack.getOrNull(stack.size - 2) ?: Color.TRANSPARENT)
 		views[2].setBackgroundColor(stack.getOrNull(stack.size - 3) ?: Color.TRANSPARENT)
+		views[3].setBackgroundColor(stack.getOrNull(stack.size - 4) ?: Color.TRANSPARENT)
 		verbose("stack content: ${stack.joinToString()}")
 
 	}

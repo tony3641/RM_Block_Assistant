@@ -17,7 +17,8 @@ class BlockStackUI : AnkoComponent<Fragment> {
 		const val BLOCK1_ID = 237
 		const val BLOCK2_ID = 238
 		const val BLOCK3_ID = 239
-		const val POP_BUTTON_ID = 240
+		const val BLOCK4_ID = 240
+		const val POP_BUTTON_ID = 241
 	}
 
 	override fun createView(ui: AnkoContext<Fragment>): View = with(ui) {
@@ -90,6 +91,14 @@ class BlockStackUI : AnkoComponent<Fragment> {
 			}.lparams {
 				alignStart(BLOCK2_ID)
 				below(BLOCK2_ID)
+				width = dip(160)
+				height = dip(80)
+			}
+			imageView {
+				id = BLOCK4_ID
+			}.lparams {
+				alignStart(BLOCK3_ID)
+				below(BLOCK3_ID)
 				width = dip(160)
 				height = dip(80)
 			}
