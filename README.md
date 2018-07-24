@@ -1,4 +1,4 @@
-## RoboMaster Summer Camp 2018 Team **Deep♂Dark**
+# RoboMaster Summer Camp 2018 Team **Deep♂Dark**
 ![team](https://img.shields.io/badge/Team-Deep%E2%99%82Dark-yellow.svg) ![group](https://img.shields.io/badge/Group-14-blue.svg) ![build](	https://img.shields.io/teamcity/codebetter/bt428.svg)  
 
 
@@ -7,4 +7,6 @@
 
 
 ## 一个令人智减的 UI
-因为 `辣:chicken:` 遥控手记不住 `stack` 中的色块，需要写一个降智界面对其进行打击。
+因为 **辣:chicken:** 遥控手记不住 `stack` 中的色块，需要写一个降智界面对其进行打击。
+
+# **真是丢人的前端水平**
