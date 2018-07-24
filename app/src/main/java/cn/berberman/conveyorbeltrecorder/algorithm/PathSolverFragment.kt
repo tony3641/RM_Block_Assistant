@@ -9,17 +9,18 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import cn.berberman.conveyorbeltrecorder.R
 import cn.berberman.conveyorbeltrecorder.algorithm.PathSolver.Color
-import cn.berberman.conveyorbeltrecorder.http.HttpUtil
+import cn.berberman.conveyorbeltrecorder.algorithm.http.HttpUtil
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.support.v4.UI
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.support.v4.toast
 
-class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
+class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.OnLongClickListener {
 
 
 	private lateinit var blocks: MutableList<ImageButton>
@@ -35,9 +36,16 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 	private lateinit var colorData: Array<PathSolver.Color>
 
 	private lateinit var activeColor: PathSolver.Color
+	private var isActiveCastle = true
 
 	private var lastTick: Long = 0
 	private var lastViewId: Int = 0
+
+	private var isFinished = true
+		set(value) {
+			doneButton.isClickable = value
+			field = value
+		}
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val ui = UI { PathSolverUI().createView(this) }.view
@@ -48,23 +56,12 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 		return ui
 	}
 
-//	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup,
-//	                          savedInstanceState: Bundle?): View {
-//		val ui = UI { PathSolverUI().createView(this) }.view
-//		blocks = mutableListOf()
-//		initView(ui)
-//		colorData = Array(64) { Color.NULL }
-//		activeColor = Color.NULL
-//		return ui
-//	}
-
 	private fun initView(view: View) {
 
 		for (i in 1..64)
 			view.findViewById<ImageButton>(PathSolverUI.getBlockViewId(i)).let(blocks::add)
 
 		blocks.forEach { it.setBackgroundResource(R.color.valid) }
-
 		yellowBlock = view.findViewById(PathSolverUI.YELLOW_BUTTON_ID)
 		redBlock = view.findViewById(PathSolverUI.RED_BUTTON_ID)
 		blueBlock = view.findViewById(PathSolverUI.BLUE_BUTTON_ID)
@@ -84,6 +81,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 		clearButton.setOnClickListener(this)
 		doneButton.setOnClickListener(this)
 
+		doneButton.setOnLongClickListener(this)
 		activeColor(Color.NULL)
 	}
 
@@ -91,16 +89,18 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 
 
 		when (v.id) {
-
 			in PathSolverUI.getBlockViewId(1)
 					..PathSolverUI.getBlockViewId(64) -> {
 				PathSolverUI.getColorDataIndex(v.id).let {
 
 					if (System.currentTimeMillis() - lastTick <= 500 && lastViewId == it) {
 						colorData[it] = Color.NULL
+						blocks[it].imageResource = 0
 						refresh(it)
 					} else {
 						colorData[it] = activeColor
+						if (isActiveCastle && activeColor != Color.NULL)
+							blocks[it].imageResource = R.drawable.ic_terrain_white_24dp
 						refresh(it)
 						lastTick = System.currentTimeMillis()
 						lastViewId = it
@@ -114,29 +114,38 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 			PathSolverUI.BLUE_BUTTON_ID               -> activeColor(Color.BLUE)
 
 			PathSolverUI.CLEAR_BUTTON_ID              -> {
-				blocks.forEach { it.setBackgroundColor(context.getColor(Color.NULL.color)) }
+				blocks.forEach {
+					it.setBackgroundColor(context.getColor(Color.NULL.color))
+					it.imageResource = 0
+				}
+				isActiveCastle = true
 				for (i in colorData.indices)
 					colorData[i] = Color.NULL
 			}
 
 			PathSolverUI.DONE_BUTTON_ID               -> {
-
-
 				val data = PathSolver.encode(colorData)
 				debug("!data: " + data.joinToString())
 				if (data.size != 16) {
 					toast("图似乎不对~")
 					return
 				}
-
+				isFinished = false
 				val task =
 						async(CommonPool) {
-							HttpUtil.httpGet("http://192.168.1.103:2333",
-									data.also { debug(it.joinToString()) })
+							HttpUtil.httpGet(data.also { debug(it.joinToString()) })
 						}
 				launch(CommonPool) {
-					val result = task.await()
-
+					val result: String
+					try {
+						result = task.await()
+					} catch (e: Exception) {
+						e.printStackTrace()
+						onUiThread {
+							toast("服务器连接错误~")
+						}
+						return@launch
+					}
 					if (result == "timeout") {
 						onUiThread {
 							toast("解图超时了~")
@@ -152,22 +161,45 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 							.map { it.toInt() }.toIntArray().map(Color.Companion::fromCode)
 
 					onUiThread {
-						if (d.size == 64)
+						if (d.size == 64) {
 							for (i in colorData.indices) {
 								colorData[i] = d[i]
 								refresh(i)
 							}
-						else toast("图似乎无解~")
+							isActiveCastle = false
+						} else toast("图似乎无解~")
 
 					}
 				}
+				isFinished = true
 			}
 		}
 	}
 
+	override fun onLongClick(v: View): Boolean {
+		when (v.id) {
+			PathSolverUI.DONE_BUTTON_ID -> {
+				val template = "0-4-60-56-57-61-5-1-58-2-6-62-59-63-7-3"
+						.split("-")
+						.map { it.toInt() }
+						.toIntArray()
+						.let(PathSolver::decode)
+				for (i in colorData.indices) {
+					colorData[i] = template[i]
+					refresh(i)
+				}
+			}
+		}
+		return true
+	}
+
 
 	private fun refresh(index: Int) {
-		blocks[index].setBackgroundColor(context.getColor(colorData[index].color))
+		colorData[index].let {
+			blocks[index].setBackgroundColor(context.getColor(it.color))
+			if (it == Color.NULL)
+				blocks[index].imageResource = 0
+		}
 	}
 
 	private fun activeColor(color: Color) {
@@ -175,6 +207,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener {
 		blueBlock.imageAlpha = 0
 		greenBlock.imageAlpha = 0
 		redBlock.imageAlpha = 0
+
 
 		when (color) {
 			Color.YELLOW -> yellowBlock.imageAlpha = 255

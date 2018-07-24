@@ -5,6 +5,9 @@ import cn.berberman.conveyorbeltrecorder.R
 
 object PathSolver {
 
+	var breathlessServerHost = "192.168.1.103"
+
+
 	enum class Color(@ColorRes val color: Int, val code: Int) {
 		RED(R.color.red, 3),
 		GREEN(R.color.green, 2),
@@ -49,4 +52,15 @@ object PathSolver {
 			c.flatten().toIntArray() else IntArray(0)
 	}
 
+	fun decode(data: IntArray): Array<Color> {
+		val result = Array(64) { Color.NULL }
+		data.forEachIndexed { index, i ->
+			if (index in 0..3) result[i] = Color.BLUE
+			if (index in 4..7) result[i] = Color.GREEN
+			if (index in 8..11) result[i] = Color.RED
+			if (index in 12..15) result[i] = Color.YELLOW
+		}
+		return result
+	}
 }
+
