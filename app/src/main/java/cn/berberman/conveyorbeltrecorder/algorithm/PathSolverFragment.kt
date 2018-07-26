@@ -131,9 +131,16 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 					return
 				}
 				isFinished = false
+
+				if (PathSolver.breathlessServerHost == "") {
+					toast("地址似乎不对~")
+					return
+				}
+
 				val task =
 						async(CommonPool) {
-							HttpUtil.httpGet(data.also { debug(it.joinToString()) })
+							HttpUtil.httpGet(PathSolver.breathlessServerHost,
+									data.also { debug(it.joinToString()) })
 						}
 				launch(CommonPool) {
 					val result: String

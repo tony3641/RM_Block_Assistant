@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
-import android.widget.TextView
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.editText
@@ -24,7 +23,6 @@ class SettingUI : AnkoComponent<Fragment> {
 				id = REMOTE_HOST_ID
 				hint = "服务器地址~"
 
-				setText("192.168.1.103", TextView.BufferType.EDITABLE)
 				inputType = InputType.TYPE_TEXT_VARIATION_URI
 			}
 		}

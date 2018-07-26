@@ -1,14 +1,13 @@
 package cn.berberman.conveyorbeltrecorder.algorithm.http
 
-import cn.berberman.conveyorbeltrecorder.algorithm.PathSolver
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.coroutines.experimental.suspendCoroutine
 
 object HttpUtil {
-	suspend fun httpGet(data: IntArray): String =
+	suspend fun httpGet(ip: String, data: IntArray): String =
 			suspendCoroutine {
-				val url = URL("http://${PathSolver.breathlessServerHost}:2333/breathless/" +
+				val url = URL("http://$ip:2333/breathless/" +
 						data.joinToString(separator = "-"))
 				val connection = url.openConnection() as HttpURLConnection
 				with(connection) {

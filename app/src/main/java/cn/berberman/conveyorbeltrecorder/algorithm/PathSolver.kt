@@ -2,10 +2,18 @@ package cn.berberman.conveyorbeltrecorder.algorithm
 
 import android.support.annotation.ColorRes
 import cn.berberman.conveyorbeltrecorder.R
+import org.intellij.lang.annotations.Language
 
 object PathSolver {
+	@Language("RegExp")
+	val ipPattern =
+			"^((?:(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d))))"
+					.toPattern()
 
-	var breathlessServerHost = "192.168.1.103"
+	var breathlessServerHost: String = ""
+		set(value) {
+			field = if (ipPattern.matcher(value).matches()) value else ""
+		}
 
 
 	enum class Color(@ColorRes val color: Int, val code: Int) {
