@@ -26,6 +26,11 @@ class PathSolverUI : AnkoComponent<Fragment> {
 		linearLayout {
 			orientation = LinearLayout.VERTICAL
 			gravity = Gravity.CENTER
+
+			imageView {
+				setBackgroundColor(ctx.getColor(R.color.green))
+			}.lparams(width = matchParent, height = dip(20))
+
 			gridLayout {
 				rowCount = 8
 				columnCount = 8

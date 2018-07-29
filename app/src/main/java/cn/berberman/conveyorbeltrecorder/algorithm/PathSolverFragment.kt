@@ -36,7 +36,11 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 	private lateinit var colorData: Array<PathSolver.Color>
 
 	private lateinit var activeColor: PathSolver.Color
+
+	private lateinit var masks: Array<Boolean>
+
 	private var isActiveCastle = true
+	private var isSolved = false
 
 	private var lastTick: Long = 0
 	private var lastViewId: Int = 0
@@ -52,6 +56,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 		blocks = mutableListOf()
 		initView(ui)
 		colorData = Array(64) { Color.NULL }
+		masks = Array(64) { false }
 		activeColor = Color.NULL
 		return ui
 	}
@@ -98,6 +103,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 						blocks[it].imageResource = 0
 						refresh(it)
 					} else {
+						if (isSolved) masks[it] = true
 						colorData[it] = activeColor
 						if (isActiveCastle && activeColor != Color.NULL)
 							blocks[it].imageResource = R.drawable.ic_terrain_white_24dp
@@ -119,8 +125,12 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 					it.imageResource = 0
 				}
 				isActiveCastle = true
-				for (i in colorData.indices)
+				isSolved = false
+				for (i in colorData.indices) {
 					colorData[i] = Color.NULL
+					masks[i] = false
+				}
+
 			}
 
 			PathSolverUI.DONE_BUTTON_ID               -> {
@@ -172,6 +182,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 							for (i in colorData.indices) {
 								colorData[i] = d[i]
 								refresh(i)
+								isSolved = true
 							}
 							isActiveCastle = false
 						} else toast("图似乎无解~")
@@ -203,7 +214,8 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 
 	private fun refresh(index: Int) {
 		colorData[index].let {
-			blocks[index].setBackgroundColor(context.getColor(it.color))
+			blocks[index].setBackgroundColor(
+					context.getColor(if (masks[index]) R.color.fuck else it.color))
 			if (it == Color.NULL)
 				blocks[index].imageResource = 0
 		}
