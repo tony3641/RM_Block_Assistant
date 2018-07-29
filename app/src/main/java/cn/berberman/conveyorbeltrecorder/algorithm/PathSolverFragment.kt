@@ -97,16 +97,18 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 			in PathSolverUI.getBlockViewId(1)
 					..PathSolverUI.getBlockViewId(64) -> {
 				PathSolverUI.getColorDataIndex(v.id).let {
-
-					if (System.currentTimeMillis() - lastTick <= 500 && lastViewId == it) {
+					if (System.currentTimeMillis() - lastTick <= 500 && lastViewId == it && !isSolved) {
 						colorData[it] = Color.NULL
 						blocks[it].imageResource = 0
 						refresh(it)
 					} else {
-						if (isSolved) masks[it] = true
-						colorData[it] = activeColor
-						if (isActiveCastle && activeColor != Color.NULL)
-							blocks[it].imageResource = R.drawable.ic_terrain_white_24dp
+						if (isSolved)
+							masks[it] = !masks[it]
+						else {
+							colorData[it] = activeColor
+							if (isActiveCastle && activeColor != Color.NULL)
+								blocks[it].imageResource = R.drawable.ic_terrain_white_24dp
+						}
 						refresh(it)
 						lastTick = System.currentTimeMillis()
 						lastViewId = it
@@ -204,6 +206,7 @@ class PathSolverFragment : Fragment(), AnkoLogger, View.OnClickListener, View.On
 						.let(PathSolver::decode)
 				for (i in colorData.indices) {
 					colorData[i] = template[i]
+					blocks[i].imageResource = R.drawable.ic_terrain_white_24dp
 					refresh(i)
 				}
 			}

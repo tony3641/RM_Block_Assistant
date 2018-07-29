@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
 		viewPager = findViewById(MainActivityUI.VIEW_PAGER_ID)
 		fragmentPagerAdapter = MainFragmentPagerAdapter(supportFragmentManager,
-				listOf(aboutFragment, pathSolverFragment, blockStaticFragment, settingFragment))
+				listOf(aboutFragment, pathSolverFragment, settingFragment, blockStaticFragment))
 
 		viewPager.adapter = fragmentPagerAdapter
 

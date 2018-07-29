@@ -43,12 +43,12 @@ class SettingFragment : Fragment(), TextWatcher, AnkoLogger {
 
 	override fun afterTextChanged(s: Editable) {
 		s.toString().let {
-			if (PathSolver.ipPattern.matcher(it).matches()) {
+			if (PathSolver.ipPattern.matcher(it).matches() && PathSolver.breathlessServerHost != it) {
 				PathSolver.breathlessServerHost = it
 				savedRemoteHost.edit().putString("ip", it).apply()
 				toast("地址改变: ${PathSolver.breathlessServerHost}")
 			} else {
-				toast("地址似乎不对~")
+				//toast("地址似乎不对~")
 				warn("failed to match $it")
 			}
 		}

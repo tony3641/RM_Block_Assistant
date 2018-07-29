@@ -52,6 +52,10 @@ class PathSolverUI : AnkoComponent<Fragment> {
 				height = dip(350)
 
 			}
+			imageView {
+				setBackgroundColor(ctx.getColor(R.color.yellow))
+			}.lparams(width = matchParent, height = dip(20))
+
 			linearLayout {
 				orientation = LinearLayout.HORIZONTAL
 				imageButton {
